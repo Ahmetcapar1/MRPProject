@@ -1,29 +1,30 @@
 CREATE TABLE IF NOT EXISTS ITEM (
     ItemID INTEGER PRIMARY KEY AUTOINCREMENT,
-    LotSize INT,
-    ItemName VARCHAR(30)
+    LotSize int,
+    ItemName VARCHAR(30),
+    LeadTime int
 );
 
 CREATE TABLE IF NOT EXISTS BOM (
-    ParentID INT,
-    ChildID INT,
-    Quantity INT,
+    ParentID int,
+    ChildID int,
+    Quantity int,
     FOREIGN KEY (ParentID) REFERENCES ITEM(ItemID),
     FOREIGN KEY (ChildID) REFERENCES ITEM(ItemID)
 );
 
 CREATE TABLE IF NOT EXISTS INVENTORY (
     InventoryID INTEGER PRIMARY KEY AUTOINCREMENT,
-    ItemID INT,
-    Quantity INT,
+    ItemID int,
+    Quantity int,
     FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID)
 );
 
 CREATE TABLE IF NOT EXISTS GROSS_REQUIREMENT (
     RequirementID INTEGER PRIMARY KEY AUTOINCREMENT,
-    ItemID INT,
-    Quantity INT,
-    Planned_Period INT,
+    ItemID int,
+    Quantity int,
+    Planned_Period int,
     FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID),
     FOREIGN KEY (Planned_Period) REFERENCES PERIODS(PeriodID)
 );
@@ -32,15 +33,24 @@ CREATE TABLE IF NOT EXISTS PERIODS (
     PeriodID INT PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS SYSTEM (
-    RequirementID INT,
-    InventoryID INT,
-    PeriodID INT,
+CREATE TABLE IF NOT EXISTS MODEL (
+    RequirementID int,
+    InventoryID int,
+    PeriodID int,
+    OrderID int,
     FOREIGN KEY (RequirementID) REFERENCES GROSS_REQUIREMENT(RequirementID),
     FOREIGN KEY (InventoryID) REFERENCES INVENTORY(InventoryID),
-    FOREIGN KEY (PeriodID) REFERENCES PERIODS(PeriodID)
+    FOREIGN KEY (PeriodID) REFERENCES PERIODS(PeriodID),
+    FOREIGN KEY (OrderID) REFERENCES ORDERS(OrderID)
 );
 
+CREATE TABLE IF NOT EXISTS ORDERS (
+    OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ItemID int,
+    PeriodID int,
+    FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID),
+    FOREIGN KEY (PeriodID) REFERENCES PERIODS(PeriodID)
+);
 
 INSERT OR IGNORE INTO PERIODS (PeriodID)
 VALUES

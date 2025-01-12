@@ -120,6 +120,15 @@ elif table == "GrossRequirement":
 
 
 
-
+if st.button("Clear Database"):
+    try:
+        cursor.execute("DELETE FROM ITEM")
+        cursor.execute("DELETE FROM BOM")
+        cursor.execute("DELETE FROM INVENTORY")
+        cursor.execute("DELETE FROM GROSS_REQUIREMENTS")
+        conn.commit()
+        st.success("Database cleared successfully!")
+    except sqlite3.Error as e:
+        st.error(f"Error clearing the database: {e}")
 st.sidebar.write("Remember to save your work!")
 conn.close()
