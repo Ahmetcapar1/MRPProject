@@ -96,11 +96,9 @@ elif table == "Inventory":
                 st.error(f"Error: {e}")
 
 elif table == "GrossRequirement":
-    with st.form("Requirement_form"):
-        
+    with st.form("inventory_form"):
         item_name = st.text_input("Item Name")
-        quantity_ordered = st.number_input("Quantity Ordered", min_value=1, step=1)
-        planned_date = st.number_input("Planned Period")
+        quantity_available = st.number_input("Quantity Available", min_value=0, step=1)
         submitted = st.form_submit_button("Insert")
 
         if submitted:
@@ -111,11 +109,11 @@ elif table == "GrossRequirement":
                     st.error(f"Item '{item_name}' does not exist in the database.")
                 else:
                     cursor.execute(
-                        "INSERT INTO GROSS_REQUIREMENTS (ItemID, Quantity, PlannedPeriods) VALUES (?, ?, ?)",
-                        (item[0], quantity_ordered,planned_date),
+                        "INSERT INTO INVENTORY (ItemID, Quantity) VALUES (?, ?)",
+                        (item[0], quantity_available),
                     )
-                conn.commit()
-                st.success("Order inserted successfully!")
+                    conn.commit()
+                    st.success("INVENTORY entry inserted successfully!")
             except sqlite3.IntegrityError as e:
                 st.error(f"Error: {e}")
 
