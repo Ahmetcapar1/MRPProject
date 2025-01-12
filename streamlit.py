@@ -5,6 +5,14 @@ import streamlit as st
 conn = sqlite3.connect('sample_mrp_database.db')
 conn.execute("PRAGMA foreign_keys = ON;")
 cursor = conn.cursor()
+def initialize_database_from_file(file_path):
+    with open(file_path, "r") as f:
+        schema_sql = f.read()
+    conn.executescript(schema_sql)
+    conn.commit()
+
+# Call the initialize function after creating the database connection
+initialize_database_from_file("Tables.sql")
 
 
 st.title("MRP Database Input Tool")
