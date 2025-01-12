@@ -111,7 +111,7 @@ elif table == "GrossRequirement":
                 else:
                     cursor.execute(
                         "INSERT INTO GROSS_REQUIREMENTS (ItemID, Quantity, PlannedPeriods) VALUES (?, ?, ?)",
-                        (item[0], quantity_ordered,planned_date),
+                        (item[0], quantity_ordered, planned_date),
                     )
                 conn.commit()
                 st.success("Order inserted successfully!")
