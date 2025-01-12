@@ -120,7 +120,7 @@ elif table == "GrossRequirement":
 
 
 
-if st.button("Clear Database"):
+if st.button("Show The Result"):
     try:
         cursor.execute("DELETE FROM ITEM")
         cursor.execute("DELETE FROM BOM")
