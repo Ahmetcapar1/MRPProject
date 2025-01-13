@@ -69,7 +69,7 @@ elif table == "BillOfMaterials":
                     st.error(f"Child item '{child_item_name}' does not exist in the database.")
                 else:
                     cursor.execute(
-                        "INSERT INTO BOM (ParentID, ChildID, Quantity) VALUES (?, ?, ?)",
+                        "INSERT INTO BOM (ParentID, ChildID, ChildQuantity) VALUES (?, ?, ?)",
                         (parent_item[0], child_item[0], quantity_required),
                     )
                     conn.commit()
@@ -91,7 +91,7 @@ elif table == "Inventory":
                     st.error(f"Item '{item_name}' does not exist in the database.")
                 else:
                     cursor.execute(
-                        "INSERT INTO INVENTORY (ItemID, Quantity) VALUES (?, ?)",
+                        "INSERT INTO INVENTORY (ItemID, InventoryQuantity) VALUES (?, ?)",
                         (item[0], quantity_available),
                     )
                     conn.commit()
@@ -114,7 +114,7 @@ elif table == "GrossRequirement":
                     st.error(f"Item '{item_name}' does not exist in the database.")
                 else:
                     cursor.execute(
-                        "INSERT INTO GROSS_REQUIREMENT (ItemID, Quantity, Planned_Period) VALUES (?, ?, ?)",
+                        "INSERT INTO GROSS_REQUIREMENT (ItemID, RequiredQuantity, Planned_Period) VALUES (?, ?, ?)",
                         (item[0], quantity_ordered, planned_date),
                     )
                     conn.commit()
