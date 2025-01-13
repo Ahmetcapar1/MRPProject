@@ -2,7 +2,7 @@ import sqlite3
 import streamlit as st
 
 
-conn = sqlite3.connect('sample_mrp_database.db')
+conn = sqlite3.connect('sample_database.db')
 conn.execute("PRAGMA foreign_keys = ON;")
 cursor = conn.cursor()
 
