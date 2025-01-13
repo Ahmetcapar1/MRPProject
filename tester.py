@@ -71,8 +71,26 @@ display_table("GROSS_REQUIREMENT")
 
 run_mrp_calculation(MRP_CALCULATION_SQL_FILE)
 
+# Query to retrieve the formatted order details
+query = """
+SELECT 
+    ORDERS.OrderQuantity AS Amount,
+    ITEM.ItemName,
+    ORDERS.PeriodID
+FROM 
+    ORDERS
+JOIN 
+    ITEM ON ORDERS.ItemID = ITEM.ItemID;
+"""
 
-display_table("ORDERS")
+# Execute the query
+cursor.execute(query)
+orders = cursor.fetchall()
+
+# Format and print the output
+for order in orders:
+    amount, item_name, period_id = order
+    print(f'Order "{amount}" "{item_name}" at "{period_id}"')
 
 
 conn.close()

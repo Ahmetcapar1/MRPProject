@@ -126,10 +126,24 @@ if st.button("See Results"):
     try:
         run_mrp_calculation("MRPCalculation.sql")
 
-        st.subheader("Orders")
-        cursor.execute("SELECT * FROM ORDERS")
+        query = """
+        SELECT 
+            ORDERS.OrderQuantity AS Amount,
+            ITEM.ItemName,
+            ORDERS.PeriodID
+        FROM 
+            ORDERS
+        JOIN 
+            ITEM ON ORDERS.ItemID = ITEM.ItemID;
+        """
+
+        cursor.execute(query)
         orders = cursor.fetchall()
-        st.write(orders)
+
+        st.subheader("Order Results")
+        for order in orders:
+            amount, item_name, period_id = order
+            st.write(f'Order "{amount}" "{item_name}" at "{period_id}"')
 
         cursor.executescript("""
         DELETE FROM ITEM;
@@ -142,6 +156,7 @@ if st.button("See Results"):
         st.success("Results displayed and database cleared!")
     except sqlite3.Error as e:
         st.error(f"An error occurred: {e}")
+
 
 conn.close()
 
