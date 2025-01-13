@@ -1,4 +1,3 @@
--- Step 1: Deduct Gross Requirements from Inventory
 WITH Inventory_Adjustment AS (
     SELECT 
         INVENTORY.InventoryID,
@@ -19,7 +18,6 @@ WHERE EXISTS (
     WHERE Inventory_Adjustment.InventoryID = INVENTORY.InventoryID
 );
 
--- Step 2: Adjust Remaining Gross Requirements if Inventory is Insufficient
 WITH Remaining_Requirements AS (
     SELECT 
         GROSS_REQUIREMENT.RequirementID,
@@ -41,9 +39,8 @@ WHERE EXISTS (
     WHERE Remaining_Requirements.RequirementID = GROSS_REQUIREMENT.RequirementID
 );
 
--- Step 3: Generate New Gross Requirements for Child Items
 WITH RECURSIVE Recursive_Requirements(RequirementID, ItemID, RequiredQuantity, Planned_Period) AS (
-    -- Anchor Query: Start with existing Gross Requirements
+    
     SELECT 
         GROSS_REQUIREMENT.RequirementID,
         GROSS_REQUIREMENT.ItemID,
@@ -53,9 +50,8 @@ WITH RECURSIVE Recursive_Requirements(RequirementID, ItemID, RequiredQuantity, P
 
     UNION ALL
 
-    -- Recursive Query: Generate requirements for child items
     SELECT 
-        NULL AS RequirementID, -- New requirements don't have an existing RequirementID
+        NULL AS RequirementID, 
         BOM.ChildID AS ItemID,
         BOM.ChildQuantity * Recursive_Requirements.RequiredQuantity AS RequiredQuantity,
         Recursive_Requirements.Planned_Period - ITEM.LeadTime AS Planned_Period
@@ -72,14 +68,11 @@ SELECT
 FROM Recursive_Requirements
 WHERE Recursive_Requirements.RequirementID IS NULL;
 
-
-
--- Step 4: Create Orders for Items Without Children
 INSERT INTO ORDERS (ItemID, PeriodID, OrderQuantity)
 SELECT 
     GROSS_REQUIREMENT.ItemID,
     GROSS_REQUIREMENT.Planned_Period - ITEM.LeadTime AS PeriodID,
-    CAST((GROSS_REQUIREMENT.RequiredQuantity * 1.0 / ITEM.LotSize + 0.999999) AS INT) * ITEM.LotSize AS OrderQuantity -- Replace CEIL
+    CAST((GROSS_REQUIREMENT.RequiredQuantity * 1.0 / ITEM.LotSize + 0.999999) AS INT) * ITEM.LotSize AS OrderQuantity -- Originally I used CEIL function but SQLite does not support it so I find and imply this function to ceiling.
 FROM GROSS_REQUIREMENT
 JOIN ITEM ON GROSS_REQUIREMENT.ItemID = ITEM.ItemID
 LEFT JOIN BOM ON ITEM.ItemID = BOM.ParentID
@@ -87,7 +80,6 @@ WHERE BOM.ParentID IS NULL
   AND GROSS_REQUIREMENT.RequiredQuantity > 0;
 
 
--- Step 5: Add Remaining Quantities Back to Inventory
 WITH Ordered_Quantities AS (
     SELECT 
         ORDERS.ItemID,
@@ -101,10 +93,3 @@ SELECT
     Ordered_Quantities.ExcessQuantity
 FROM Ordered_Quantities
 WHERE ExcessQuantity > 0;
-
-
-
-
-
-
-

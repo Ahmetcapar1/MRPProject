@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ITEM (
 CREATE TABLE IF NOT EXISTS BOM (
     ParentID INT,
     ChildID INT,
-    ChildQuantity INT, -- Ensure this column exists
+    ChildQuantity INT, 
     FOREIGN KEY (ParentID) REFERENCES ITEM(ItemID),
     FOREIGN KEY (ChildID) REFERENCES ITEM(ItemID)
 );
@@ -16,14 +16,14 @@ CREATE TABLE IF NOT EXISTS BOM (
 CREATE TABLE IF NOT EXISTS INVENTORY (
     InventoryID INTEGER PRIMARY KEY AUTOINCREMENT,
     ItemID INT,
-    InventoryQuantity INT, -- Ensure this column exists
+    InventoryQuantity INT, 
     FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID)
 );
 
 CREATE TABLE IF NOT EXISTS GROSS_REQUIREMENT (
     RequirementID INTEGER PRIMARY KEY AUTOINCREMENT,
     ItemID INT,
-    RequiredQuantity INT, -- Ensure this column exists
+    RequiredQuantity INT, 
     Planned_Period INT,
     FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID),
     FOREIGN KEY (Planned_Period) REFERENCES PERIODS(PeriodID)
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS ORDERS (
     OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
     ItemID INT,
     PeriodID INT,
-    OrderQuantity INT, -- Ensure this column exists
+    OrderQuantity INT, 
     FOREIGN KEY (ItemID) REFERENCES ITEM(ItemID),
     FOREIGN KEY (PeriodID) REFERENCES PERIODS(PeriodID)
 );
