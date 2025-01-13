@@ -132,6 +132,8 @@ if st.button("See Results"):
         st.write(orders)
 
         cursor.executescript("""
+        DELETE FROM ITEM;
+        DELETE FROM BOM;
         DELETE FROM GROSS_REQUIREMENT;
         DELETE FROM INVENTORY;
         DELETE FROM ORDERS;
