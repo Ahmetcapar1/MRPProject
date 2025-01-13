@@ -79,7 +79,6 @@ LEFT JOIN BOM ON ITEM.ItemID = BOM.ParentID
 WHERE BOM.ParentID IS NULL
   AND GROSS_REQUIREMENT.RequiredQuantity > 0;
 
-
 WITH Ordered_Quantities AS (
     SELECT 
         ORDERS.ItemID,

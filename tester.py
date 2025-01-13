@@ -92,5 +92,4 @@ for order in orders:
     amount, item_name, period_id = order
     print(f'Order "{amount}" "{item_name}" at "{period_id}"')
 
-
 conn.close()
